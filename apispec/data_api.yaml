@@ -1,0 +1,79 @@
+swagger: '2.0'
+info:
+  title: FITS Data API Example
+  version: "0.1"
+consumes:
+  - application/json
+produces:
+  - application/json
+
+paths:
+  /:
+    get:
+      operationId: fits_server.root
+      summary: Get root server response
+      responses:
+        200:
+          description: Return server information
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Root'
+
+  /dates:
+    get:
+      operationId: fits_server.dates
+      summary: Get available dates
+      responses:
+        200:
+          description: Return available dates
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Date'
+
+parameters:
+  date:
+    name: date
+    description: Date for data
+    in: path
+    type: integer
+    required: true
+    pattern: "^[0-9]{8}$"
+
+definitions:
+  Root:
+    type: object
+    required:
+      - server_name
+    properties:
+      server_name:
+        type: string
+        description: Server name identifier
+        example: "mlsodata"
+        readOnly: true
+      time:
+        type: string
+        format: date-time
+        description: Creation time
+        example: "2015-07-07T15:49:51.230+02:00"
+        readOnly: true
+
+  Date:
+    type: object
+    properties:
+      date:
+        type: string
+        description: Date of the data payload
+        example: "20150624"
+        readOnly: true
+      level:
+        type: array
+        description: Levels available
+        example: [{"name": "L0", "n_files": 895}, {"name": "L1", "n_files": 2475}]
+        readOnly: true
+      link:
+        type: string
+        description: The resource link to the containing data
+        example: "/dates/20150624"
+        readOnly: true
